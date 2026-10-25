@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07111f" />
+  <meta name="description" content="Automate WhatsApp conversations, qualify leads, and support customers with PieSetu WhatsApp Bot." />
+  <title>PieSetu WhatsApp Bot — Conversations on Autopilot</title>
+  <style>
+    :root {
+      --bg: #07111f;
+      --panel: rgba(16, 31, 51, .78);
+      --panel-solid: #101f33;
+      --text: #f4f8ff;
+      --muted: #a9b8ca;
+      --line: rgba(190, 215, 245, .14);
+      --blue: #5b8cff;
+      --cyan: #4de1d2;
+      --green: #2fd18b;
+      --radius: 24px;
+      --shadow: 0 24px 80px rgba(0, 0, 0, .28);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 12% 8%, rgba(58, 113, 255, .19), transparent 34%),
+        radial-gradient(ellipse at 90% 20%, rgba(45, 218, 191, .12), transparent 30%),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
+    .nav-wrap { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(18px); background: rgba(7, 17, 31, .78); border-bottom: 1px solid var(--line); }
+    nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 11px; font-size: 1.08rem; font-weight: 800; letter-spacing: -.03em; }
+    .brand-mark { display: grid; place-items: center; width: 39px; height: 39px; border-radius: 13px; color: #061522; background: linear-gradient(135deg, var(--cyan), #78a8ff); font-weight: 900; box-shadow: 0 8px 24px rgba(77, 225, 210, .2); }
+    .nav-links { display: flex; align-items: center; gap: 27px; color: var(--muted); font-size: .92rem; }
+    .nav-links a:hover { color: var(--text); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; border: 1px solid transparent; border-radius: 13px; padding: 12px 19px; font-weight: 750; font-size: .94rem; transition: transform .2s ease, box-shadow .2s ease, background .2s ease; cursor: pointer; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { color: #061522; background: linear-gradient(110deg, var(--cyan), #8ab1ff); box-shadow: 0 12px 32px rgba(77, 225, 210, .16); }
+    .btn-primary:hover { box-shadow: 0 16px 38px rgba(77, 225, 210, .25); }
+    .btn-ghost { border-color: var(--line); background: rgba(255,255,255,.035); color: var(--text); }
+    .hero { padding: 88px 0 82px; }
+    .hero-grid { display: grid; grid-template-columns: 1.08fr .92fr; align-items: center; gap: 64px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; padding: 7px 12px; border: 1px solid rgba(77,225,210,.23); border-radius: 999px; color: #a8fff1; background: rgba(77,225,210,.07); font-size: .78rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 5px rgba(47,209,139,.12); }
+    h1 { margin: 22px 0 19px; max-width: 720px; font-size: clamp(2.65rem, 5.3vw, 4.8rem); line-height: 1.04; letter-spacing: -.065em; }
+    .gradient-text { background: linear-gradient(100deg, #7cf0df 5%, #8db2ff 65%, #c2a6ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero-copy { max-width: 590px; color: var(--muted); font-size: 1.12rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 29px 0 25px; }
+    .trust-row { display: flex; flex-wrap: wrap; gap: 17px; color: #c0ccdc; font-size: .85rem; }
+    .trust-row span { display: inline-flex; align-items: center; gap: 7px; }
+    .check { color: var(--cyan); font-weight: 900; }
+    .visual { position: relative; min-height: 450px; display: grid; place-items: center; }
+    .glow { position: absolute; width: 310px; height: 310px; border-radius: 50%; background: rgba(57, 128, 255, .18); filter: blur(55px); }
+    .chat-card { position: relative; width: min(100%, 390px); padding: 20px; border: 1px solid rgba(195,220,255,.18); border-radius: 28px; background: linear-gradient(145deg, rgba(24,45,71,.96), rgba(9,22,38,.96)); box-shadow: var(--shadow); transform: rotate(1.5deg); }
+    .chat-head { display: flex; align-items: center; gap: 12px; padding-bottom: 17px; border-bottom: 1px solid var(--line); }
+    .avatar { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 15px; background: linear-gradient(135deg, #27d7a0, #78e9db); color: #05221d; font-size: 1.2rem; font-weight: 900; }
+    .chat-head strong { display: block; font-size: .95rem; }
+    .chat-head small { color: #8fa5bc; font-size: .78rem; }
+    .online { margin-left: auto; color: #67e5b3; font-size: .75rem; }
+    .chat-body { padding: 20px 0 12px; display: grid; gap: 13px; }
+    .bubble { max-width: 85%; padding: 12px 14px; border-radius: 15px; font-size: .85rem; }
+    .bubble.in { justify-self: start; background: #192e46; color: #e7f0fb; border-bottom-left-radius: 5px; }
+    .bubble.out { justify-self: end; color: #06221d; background: linear-gradient(120deg, #72e8c2, #b1f3df); border-bottom-right-radius: 5px; }
+    .bubble small { display: block; margin-top: 4px; opacity: .65; font-size: .67rem; text-align: right; }
+    .automation-tag { position: absolute; display: flex; align-items: center; gap: 10px; padding: 13px 15px; border: 1px solid var(--line); border-radius: 16px; background: rgba(16,31,51,.94); box-shadow: var(--shadow); font-size: .82rem; font-weight: 750; }
+    .automation-tag span { display: grid; place-items: center; width: 31px; height: 31px; border-radius: 10px; background: rgba(91,140,255,.16); }
+    .tag-one { top: 42px; right: -7px; }
+    .tag-two { bottom: 40px; left: -20px; }
+    section { padding: 78px 0; }
+    .section-head { max-width: 700px; margin: 0 auto 42px; text-align: center; }
+    .kicker { color: var(--cyan); font-size: .78rem; font-weight: 850; letter-spacing: .13em; text-transform: uppercase; }
+    h2 { margin: 11px 0 13px; font-size: clamp(2rem, 3.5vw, 3.15rem); line-height: 1.12; letter-spacing: -.05em; }
+    .section-head p, .feature-card p, .step p { color: var(--muted); }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 17px; }
+    .feature-card { padding: 26px; border: 1px solid var(--line); border-radius: var(--radius); background: linear-gradient(145deg, rgba(20,39,62,.78), rgba(12,25,42,.65)); transition: transform .2s ease, border-color .2s ease; }
+    .feature-card:hover { transform: translateY(-4px); border-color: rgba(77,225,210,.35); }
+    .feature-icon { width: 47px; height: 47px; display: grid; place-items: center; border-radius: 15px; color: var(--cyan); background: rgba(77,225,210,.1); font-size: 1.3rem; }
+    h3 { margin: 18px 0 8px; font-size: 1.12rem; letter-spacing: -.02em; }
+    .feature-card p { margin: 0; font-size: .94rem; }
+    .band { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(255,255,255,.018); }
+    .benefits { display: grid; grid-template-columns: .9fr 1.1fr; align-items: center; gap: 60px; }
+    .benefit-copy p { color: var(--muted); }
+    .benefit-list { display: grid; gap: 14px; }
+    .benefit-item { display: flex; align-items: flex-start; gap: 14px; padding: 18px; border: 1px solid var(--line); border-radius: 17px; background: rgba(16,31,51,.62); }
+    .benefit-item .checkmark { flex: 0 0 30px; height: 30px; display: grid; place-items: center; border-radius: 10px; background: rgba(47,209,139,.12); color: #69eab2; font-weight: 900; }
+    .benefit-item strong { display: block; margin-bottom: 3px; }
+    .benefit-item p { margin: 0; color: var(--muted); font-size: .9rem; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .step { padding: 25px; border-radius: 21px; border: 1px solid var(--line); background: rgba(16,31,51,.54); }
+    .step-num { color: var(--cyan); font-size: .8rem; font-weight: 900; letter-spacing: .12em; }
+    .step h3 { margin-top: 13px; }
+    .cta { padding: 56px; border: 1px solid rgba(117,207,255,.24); border-radius: 30px; text-align: center; background: radial-gradient(ellipse at top, rgba(91,140,255,.2), transparent 65%), linear-gradient(135deg, #122842, #0b1a2b); box-shadow: var(--shadow); }
+    .cta p { max-width: 600px; margin: 0 auto 25px; color: var(--muted); }
+    footer { padding: 28px 0; border-top: 1px solid var(--line); color: #91a4ba; font-size: .84rem; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+    .footer-links { display: flex; gap: 18px; }
+    @media (max-width: 900px) {
+      .hero-grid, .benefits { grid-template-columns: 1fr; gap: 28px; }
+      .hero { padding-top: 60px; }
+      .visual { min-height: 420px; }
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+      .benefits { gap: 35px; }
+      .tag-one { right: 3%; }
+      .tag-two { left: 2%; }
+    }
+    @media (max-width: 620px) {
+      .container { width: min(100% - 28px, 1160px); }
+      nav { min-height: 68px; }
+      .nav-links { display: none; }
+      .nav-cta { padding: 10px 13px; font-size: .82rem; }
+      .hero { padding: 48px 0 55px; }
+      h1 { font-size: clamp(2.55rem, 12vw, 3.7rem); }
+      .hero-copy { font-size: 1rem; }
+      .hero-actions .btn { width: 100%; }
+      .visual { min-height: 390px; }
+      .chat-card { padding: 16px; }
+      .tag-one { top: 8px; right: 0; }
+      .tag-two { bottom: 5px; left: 0; }
+      section { padding: 58px 0; }
+      .feature-grid, .steps { grid-template-columns: 1fr; }
+      .feature-card { padding: 23px; }
+      .cta { padding: 36px 22px; }
+      .footer-inner { align-items: flex-start; flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrap">
+    <div class="container">
+      <nav aria-label="Main navigation">
+        <a class="brand" href="#home" aria-label="PieSetu WhatsApp Bot home">
+          <span class="brand-mark">P</span><span>PieSetu <span class="gradient-text">Bot</span></span>
+        </a>
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#how-it-works">How it works</a>
+          <a href="#benefits">Benefits</a>
+        </div>
+        <a class="btn btn-primary nav-cta" href="#get-started">Try the widget <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow"><span class="pulse"></span> Smarter customer conversations</div>
+          <h1>Turn every chat into a <span class="gradient-text">growth opportunity.</span></h1>
+          <p class="hero-copy">Automate customer conversations, respond faster, and keep your team focused on what matters. Meet a simpler way to manage business chats with PieSetu Bot.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#get-started">Start a conversation <span aria-hidden="true">→</span></a>
+            <a class="btn btn-ghost" href="#features">Explore features</a>
+          </div>
+          <div class="trust-row">
+            <span><b class="check">✓</b> Faster responses</span>
+            <span><b class="check">✓</b> Always-on support</span>
+            <span><b class="check">✓</b> Less manual work</span>
+          </div>
+        </div>
+
+        <div class="visual" aria-label="Illustration of an automated customer chat">
+          <div class="glow"></div>
+          <div class="chat-card">
+            <div class="chat-head">
+              <div class="avatar">P</div>
+              <div><strong>PieSetu Assistant</strong><small>Automated support</small></div>
+              <span class="online">● Online</span>
+            </div>
+            <div class="chat-body">
+              <div class="bubble in">Hi! I’d like to know more about your services.</div>
+              <div class="bubble out">Of course! 👋 I can help with details, answer common questions, or connect you with the team.</div>
+              <div class="bubble in">Can someone contact me?</div>
+              <div class="bubble out">Absolutely. Share your details in the chat and our team can follow up with you.<small>Sent automatically ✓</small></div>
+            </div>
+          </div>
+          <div class="automation-tag tag-one"><span>✦</span> Instant replies</div>
+          <div class="automation-tag tag-two"><span>↗</span> Lead conversations</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">Built for better conversations</div>
+          <h2>Everything your chat workflow needs.</h2>
+          <p>Make customer communication easier with a focused set of tools designed to reduce repetitive work and help your team respond consistently.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Automated responses</h3>
+            <p>Give customers helpful answers quickly, even when your team is busy or away.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">◎</div>
+            <h3>Lead capture</h3>
+            <p>Guide interested visitors toward sharing their requirements and contact details.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">◷</div>
+            <h3>Always-on engagement</h3>
+            <p>Keep conversations moving outside regular business hours with automated flows.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">⇄</div>
+            <h3>Team handoff</h3>
+            <p>Make it easier to move a conversation to a person when extra help is needed.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">⌘</div>
+            <h3>Consistent communication</h3>
+            <p>Use a repeatable conversation experience so customers know what to expect.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">↗</div>
+            <h3>Website-ready widget</h3>
+            <p>Let visitors start a conversation directly from your website through the chat widget.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="benefits">
+      <div class="container benefits">
+        <div class="benefit-copy">
+          <div class="kicker">Work smarter</div>
+          <h2>Spend less time repeating. More time growing.</h2>
+          <p>Give your customers a clear path to answers while your team spends more time on complex questions, relationships, and closing opportunities.</p>
+          <a class="btn btn-primary" href="#get-started">See it in action <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="benefit-list">
+          <div class="benefit-item"><div class="checkmark">✓</div><div><strong>Reduce repetitive questions</strong><p>Automate common first-step answers and FAQs.</p></div></div>
+          <div class="benefit-item"><div class="checkmark">✓</div><div><strong>Respond while interest is high</strong><p>Help website visitors get started without waiting for office hours.</p></div></div>
+          <div class="benefit-item"><div class="checkmark">✓</div><div><strong>Keep conversations moving</strong><p>Direct customers toward the right information or human support.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">Simple to get started</div>
+          <h2>From first message to next step.</h2>
+          <p>A straightforward conversation flow helps visitors get the information they need and gives your team a clearer next step.</p>
+        </div>
+        <div class="steps">
+          <article class="step"><div class="step-num">STEP 01</div><h3>A visitor starts a chat</h3><p>A customer opens the chat widget from your website and asks a question.</p></article>
+          <article class="step"><div class="step-num">STEP 02</div><h3>The bot guides the conversation</h3><p>Automated replies help answer common questions and gather useful context.</p></article>
+          <article class="step"><div class="step-num">STEP 03</div><h3>Your team takes the next step</h3><p>When human assistance is needed, your team can continue the conversation.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="get-started">
+      <div class="container">
+        <div class="cta">
+          <div class="kicker">Ready when you are</div>
+          <h2>Let’s start a better conversation.</h2>
+          <p>Open the chat widget and ask how PieSetu Bot can fit into your customer communication workflow.</p>
+          <button class="btn btn-primary" id="open-chat" type="button">Open chat widget <span aria-hidden="true">↗</span></button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <a class="brand" href="#home"><span class="brand-mark">P</span><span>PieSetu Bot</span></a>
+      <span>© <span id="year"></span> PieSetu. All rights reserved.</span>
+      <div class="footer-links"><a href="#features">Features</a><a href="#get-started">Contact</a></div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // The widget provider may expose a launcher button inside its own script.
+    // This button attempts to activate common launcher selectors; if none exist,
+    // visitors can use the widget's own on-page launcher.
+    document.getElementById("open-chat").addEventListener("click", function () {
+      const selectors = [
+        '[data-wabot-launcher]',
+        '#wabot-widget-launcher',
+        '.wabot-widget-launcher',
+        '.wabot-launcher',
+        '[aria-label*="chat" i]',
+        '[title*="chat" i]'
+      ];
+      for (const selector of selectors) {
+        const launcher = document.querySelector(selector);
+        if (launcher && launcher !== this) {
+          launcher.click();
+          return;
+        }
+      }
+      const widgetFrame = document.querySelector('iframe[src*="wabot"], iframe[title*="chat" i]');
+      if (widgetFrame) {
+        widgetFrame.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+      // Safe fallback: scroll to the page corner where most chat launchers appear.
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    });
+  </script>
+
+  <!-- PieSetu WhatsApp bot widget -->
+  <script src="https://wabot.piesetucrm.com/js/widget.js" data-token="yhc26nmC67xdPeXNY8RTnDOnNU4NSR2NCgEqZ6iJ" async></script>
+</body>
+</html>
