@@ -286,42 +286,20 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // The provider's public embed snippet does not document a JavaScript open()
-    // API, so don't assume undocumented launcher IDs or methods.
-    // This CTA looks for an actual visible widget launcher after the embed loads.
+    // The widget lives inside a shadow root. Match its exact launcher so
+    // page links and this CTA can never be mistaken for the chat button.
     document.getElementById("open-chat").addEventListener("click", function () {
-      const candidates = Array.from(document.querySelectorAll(
-        'button, [role="button"], a, [tabindex="0"]'
-      )).filter((el) => {
-        if (el === this || !el.getClientRects().length) return false;
-        const r = el.getBoundingClientRect();
-        const style = window.getComputedStyle(el);
-        const nearCorner = r.right > window.innerWidth - 180 && r.bottom > window.innerHeight - 180;
-        const label = ((el.getAttribute("aria-label") || "") + " " +
-          (el.getAttribute("title") || "") + " " + (el.innerText || "")).toLowerCase();
-        const looksLikeChat = /chat|message|whatsapp|support|help|bot/.test(label);
-        return style.visibility !== "hidden" && style.display !== "none" &&
-          (nearCorner || looksLikeChat);
-      });
-
-      if (candidates.length) {
-        candidates[candidates.length - 1].click();
-        return;
-      }
-
-      // A widget can render inside a shadow root; check open shadow roots too.
       const roots = [document];
       for (let i = 0; i < roots.length; i++) {
-        const nodes = roots[i].querySelectorAll ? roots[i].querySelectorAll("*") : [];
-        for (const node of nodes) {
-          if (node.shadowRoot) roots.push(node.shadowRoot);
-        }
         const root = roots[i];
-        const launcher = root.querySelector &&
-          root.querySelector('button[aria-label*="chat" i], button[title*="chat" i], [data-wabot-launcher]');
-        if (launcher) {
-          launcher.click();
+        const launcher = root.querySelector('button[aria-label="Open chat"]');
+        if (launcher && launcher.getClientRects().length) {
+          const panel = root.querySelector('[role="dialog"][aria-label="Chat"]');
+          if (!panel || !panel.getClientRects().length) launcher.click();
           return;
+        }
+        for (const node of root.querySelectorAll("*")) {
+          if (node.shadowRoot) roots.push(node.shadowRoot);
         }
       }
 
